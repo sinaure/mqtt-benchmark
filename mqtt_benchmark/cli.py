@@ -45,7 +45,8 @@ def get_parser():
         parents=[options_parser],
     )
     publish_parser.add_argument("--message", help="Publish a message")
-    publish_parser.add_argument("--thread-num", help="Publish a message using thread", default=1)
+    publish_parser.add_argument("--thread-num", help="Publish thread number", default=1)
+    publish_parser.add_argument("--publish-num", help="Publish message seq number", default=1)
 
     sub_parser.add_parser(
         'subscribe',

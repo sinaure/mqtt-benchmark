@@ -1,5 +1,6 @@
 # coding=utf-8
 
+import sys
 import logging
 from threading import Thread
 import paho.mqtt.client as mqtt
@@ -12,7 +13,11 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
-    LOG.debug("[{0}] - {1}".format(msg.topic, str(msg.payload)))
+    LOG.debug("Subscribe on {0}, QoS Level is {1} \nMessage is \"{2}\"".format(
+        msg.topic,
+        msg.qos,
+        str(msg.payload)
+    ))
 
 
 class Subscribe(Thread):
@@ -24,9 +29,10 @@ class Subscribe(Thread):
         self.qos = self.kwargs['qos'] if 'qos' in self.kwargs else 0
 
         self.sub_client = mqtt.Client("Subscribe")
-        self.sub_client.connect(host, port, 60)
+        self.sub_client.connect(host, port, keepalive=60)
         self.sub_client.on_connect = on_connect
         self.sub_client.on_message = on_message
+
         self.sub_client.subscribe(topic=self.topic, qos=int(self.qos))
 
     def run(self):
@@ -37,11 +43,15 @@ class Subscribe(Thread):
 
 
 def main(args):
-    LOG.info("Subscribe on {0} , QoS Level is {1}".format(args.topic, args.qos))
-    subscriber = Subscribe(
-        args.host,
-        args.port,
-        topic=args.topic,
-        qos=args.qos,
-    )
-    subscriber.run_on_thread()
+    try:
+        LOG.info("Subscribe on {0} , QoS Level is {1}".format(args.topic, args.qos))
+        subscriber = Subscribe(
+            args.host,
+            args.port,
+            topic=args.topic,
+            qos=args.qos,
+        )
+        subscriber.run_on_thread()
+    except Exception as e:
+        LOG.error("%s" % (e.__str__()))
+        sys.exit()

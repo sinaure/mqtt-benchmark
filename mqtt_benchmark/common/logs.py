@@ -16,7 +16,7 @@ RESET_SEQ = "\033[0m"
 COLOR_SEQ = "\033[1;%dm"
 BOLD_SEQ = "\033[1m"
 
-BASE_COLOR_FORMAT = "[$BOLD%(name)s$RESET] [%(color_levelname)-5s] %(message)s"
+BASE_COLOR_FORMAT = "[$BOLD%(name)s$RESET][%(color_levelname)-7s] %(message)s"
 BASE_FORMAT = "[%(name)s][%(levelname)-6s] %(message)s"
 FILE_FORMAT = "[%(asctime)s]" + BASE_FORMAT
 
