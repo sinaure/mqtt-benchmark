@@ -8,7 +8,7 @@ LOG = logging.getLogger("Subscribe")
 
 
 def on_connect(client, userdata, flags, rc):
-    LOG.Info("Connected with result code " + str(rc))
+    LOG.info("Connected with result code " + str(rc))
 
 
 def on_message(client, userdata, msg):

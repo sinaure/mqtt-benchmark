@@ -2,7 +2,7 @@
 無聊拿來測試用的簡單 MQTT 測試客戶端。
 
 
-## Quick
+## Quick Start
 首先 clone 該專案到自己環境：
 ```sh
 $ git clone https://github.com/imac-cloud/mqtt-benchmark.git
