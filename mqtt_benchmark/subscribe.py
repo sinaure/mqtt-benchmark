@@ -2,6 +2,7 @@
 
 import sys
 import logging
+import datetime
 from threading import Thread
 import paho.mqtt.client as mqtt
 
@@ -13,7 +14,8 @@ def on_connect(client, userdata, flags, rc):
 
 
 def on_message(client, userdata, msg):
-    LOG.debug("Subscribe on {0}, QoS Level is {1} \nMessage is \"{2}\"".format(
+    LOG.debug("{} : Subscribe on {}, QoS Level is {} \nMessage is \"{}\"".format(
+        datetime.datetime.now(),
         msg.topic,
         msg.qos,
         str(msg.payload)
