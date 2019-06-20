@@ -16,8 +16,8 @@ class Publish(Thread):
 
         self.kwargs = kwargs
         self.topic = self.kwargs['topic'] if 'topic' in self.kwargs else None
-        self.qos = self.kwargs['qos'] if 'qos' in self.kwargs else 0
-        self.publish_num = self.kwargs['publish_num'] if 'publish_num' in self.kwargs else 1
+        self.qos = int(self.kwargs['qos']) if 'qos' in self.kwargs else 0
+        self.publish_num = int(self.kwargs['publish_num']) if 'publish_num' in self.kwargs else 1
         self.message = None
 
         self.push_client = mqtt.Client(
@@ -33,9 +33,9 @@ class Publish(Thread):
             time=datetime.datetime.now(),
             message=self.message,
         )
-        for i in range(0, int(self.publish_num)):
+        for i in range(0, self.publish_num):
             message = self.message + ", {0}".format(i + 1)
-            self.push_client.publish(self.topic, message, qos=int(self.qos))
+            self.push_client.publish(self.topic, message, qos=self.qos)
             LOG.debug(message)
 
         self.push_client.loop_stop()
@@ -61,8 +61,8 @@ def push(args, seq):
             args.host,
             args.port,
             topic=args.topic,
-            qos=args.qos,
-            publish_num=args.publish_num,
+            qos=self.qos,
+            publish_num=self.publish_num,
         )
         publish_client.message = "Thread{0}, {1}".format(seq + 1, args.message)
         publish_client.start()

@@ -1,0 +1,3 @@
+[console_scripts]
+mqtt-bench = mqtt_benchmark.cli:main
+
