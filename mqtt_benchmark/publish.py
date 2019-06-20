@@ -61,8 +61,8 @@ def push(args, seq):
             args.host,
             args.port,
             topic=args.topic,
-            qos=self.qos,
-            publish_num=self.publish_num,
+            qos=int(args.qos),
+            publish_num=int(args.publish_num),
         )
         publish_client.message = "Thread{0}, {1}".format(seq + 1, args.message)
         publish_client.start()
