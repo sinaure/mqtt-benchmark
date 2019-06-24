@@ -15,9 +15,9 @@ setup(
     version='0.1.0',
     packages=find_packages(),
     description='MQTT Benchmark Client',
-    author='Kyle Bai',
-    author_email='kyle.b@inwinstack.com',
-    url='http://www.inwinstack.com/',
+    author='Aureliano Sinatra',
+    author_email='sinaure@gmail.com',
+    url='http://www.gppgle.com/',
     install_requires=requirements,
     license="MIT",
     entry_points={

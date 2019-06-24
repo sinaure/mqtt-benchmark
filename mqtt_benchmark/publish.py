@@ -13,21 +13,26 @@ LOG = logging.getLogger("Publish")
 class Publish(Thread):
     def __init__(self, host, port, **kwargs):
         super(Publish, self).__init__()
+        LOG.info("init method")
+        LOG.info(kwargs)
+        self.topic = kwargs['topic'] if 'topic' in kwargs else None
+        self.qos = kwargs['qos'] if 'qos' in kwargs else 0
+        self.publish_num = int(kwargs['publish_num']) if 'publish_num' in kwargs else 1
+        self.username = kwargs['username'] if 'username' in kwargs else None
+        self.password = kwargs['password'] if 'password' in kwargs else None
 
-        self.kwargs = kwargs
-        self.topic = self.kwargs['topic'] if 'topic' in self.kwargs else None
-        self.qos = int(self.kwargs['qos']) if 'qos' in self.kwargs else 0
-        self.publish_num = int(self.kwargs['publish_num']) if 'publish_num' in self.kwargs else 1
-        self.message = None
+        self.push_client = mqtt.Client()
 
-        self.push_client = mqtt.Client(
-            client_id="",
-            clean_session=True,
-            userdata=None,
-        )
-        self.push_client.connect(host, port, keepalive=60)
+        
+        if self.username!= None and self.password != None: 
+            self.push_client.username_pw_set(self.username, self.password)
+
+        LOG.info("connecting to "+ host+ ":"+ port)
+        self.push_client.connect(host=host, port=port, keepalive=60)
+        LOG.info("after connecting")
 
     def run(self):
+        LOG.info("run method")
         self.push_client.loop_start()
         self.message = "{time} : {message}".format(
             time=datetime.datetime.now(),
@@ -43,6 +48,7 @@ class Publish(Thread):
 
 
 def main(args):
+    LOG.info("main method")
     thread_num = int(args.thread_num) if args.thread_num is not None else 1
     if thread_num > 0:
         for seq in range(0, thread_num):
@@ -56,6 +62,7 @@ def main(args):
 
 
 def push(args, seq):
+    LOG.info("push method")
     try:
         publish_client = Publish(
             args.host,
@@ -63,8 +70,12 @@ def push(args, seq):
             topic=args.topic,
             qos=int(args.qos),
             publish_num=int(args.publish_num),
+            username=args.username,
+            password=args.password
         )
+        LOG.info("message creating")
         publish_client.message = "Thread{0}, {1}".format(seq + 1, args.message)
+        LOG.info("client starting")
         publish_client.start()
     except Exception as e:
         LOG.error("%s" % (e.__str__()))

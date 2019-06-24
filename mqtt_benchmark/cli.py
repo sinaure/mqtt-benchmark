@@ -28,31 +28,23 @@ def get_parser():
     )
 
     options_parser = argparse.ArgumentParser(add_help=False)
+
     options_parser.add_argument("--host", help="MQTT broker host address", default="localhost")
     options_parser.add_argument("--port", help="MQTT broker bind port", default=1883)
     options_parser.add_argument("--topic", help="MQTT broker topic name")
     options_parser.add_argument("--qos", help="MQTT broker qos level", default=0)
+    options_parser.add_argument("--username", help="MQTT broker username")
+    options_parser.add_argument("--password", help="MQTT broker password")
+    
+    subparsers = parser.add_subparsers(help='types of mqtt parser')
+    
+    p_parser = subparsers.add_parser("publish", parents=[options_parser])
+    s_parser = subparsers.add_parser("subscribe", parents=[options_parser])
+    
+    p_parser.add_argument("--message", help="Publish a message", default="I'm a test")
+    p_parser.add_argument("--thread-num", help="Publish thread number", default=1)
+    p_parser.add_argument("--publish-num", help="Publish message seq number", default=1)
 
-    sub_parser = parser.add_subparsers(
-        title='commands',
-        metavar='COMMAND',
-        help='Description',
-        dest='command',
-    )
-    publish_parser = sub_parser.add_parser(
-        'publish',
-        help='Publish a message to broker',
-        parents=[options_parser],
-    )
-    publish_parser.add_argument("--message", help="Publish a message")
-    publish_parser.add_argument("--thread-num", help="Publish thread number", default=1)
-    publish_parser.add_argument("--publish-num", help="Publish message seq number", default=1)
-
-    sub_parser.add_parser(
-        'subscribe',
-        help='Subscribe a topic on borker',
-        parents=[options_parser],
-    )
     return parser
 
 
@@ -70,17 +62,22 @@ def main():
     parser = get_parser()
     args = parser.parse_args()
 
+    LOG.info(sys.argv) 
     if len(sys.argv) < 2:
         parser.print_help()
         sys.exit()
-
-    if args.command == 'publish':
+        
+    if sys.argv[1] != "publish" and   sys.argv[0] != "subscribe":  
+        LOG.error('First positional argument not accepted (chose between subscribe or publish)')
+        sys.exit()
+    
+    if sys.argv[1] == 'publish':
         if args.message is not None:
             publish.main(args)
         else:
             parser.print_help()
 
-    elif args.command == 'subscribe':
+    elif sys.argv[1] == 'subscribe':
         if args.topic is not None:
             subscribe.main(args)
         else:
