@@ -12,7 +12,8 @@ venv
 virtualenv
 .git
 build/
+dist/
 dev/var/
 var/
 dist/
-calamari_alert.egg-info/
+*.egg-info/
