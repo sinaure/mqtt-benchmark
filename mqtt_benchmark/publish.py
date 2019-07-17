@@ -28,7 +28,7 @@ class Publish(Thread):
             self.push_client.username_pw_set(self.username, self.password)
 
         LOG.info("connecting to "+ host+ ":"+ port)
-        self.push_client.connect(host=host, port=port, keepalive=60)
+        self.push_client.connect(host, port=int(port), keepalive=60)
         LOG.info("after connecting")
 
     def run(self):
