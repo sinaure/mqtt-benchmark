@@ -34,10 +34,10 @@ class Publish(Thread):
     def run(self):
         LOG.info("run method")
         self.push_client.loop_start()
-        self.message = "{time} : {message}".format(
-            time=datetime.datetime.now(),
-            message=self.message,
-        )
+        #self.message = "{time} : {message}".format(
+        #    time=datetime.datetime.now(),
+        #    message=self.message,
+        #)
         for i in range(0, self.publish_num):
             message = self.message + ", {0}".format(i + 1)
             self.push_client.publish(self.topic, message, qos=self.qos)
