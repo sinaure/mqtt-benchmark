@@ -74,7 +74,7 @@ def push(args, seq):
             password=args.password
         )
         LOG.info("message creating")
-        publish_client.message = "Thread{0}, {1}".format(seq + 1, args.message)
+        publish_client.message = args.message
         LOG.info("client starting")
         publish_client.start()
     except Exception as e:
