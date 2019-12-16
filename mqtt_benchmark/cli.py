@@ -35,6 +35,7 @@ def get_parser():
     options_parser.add_argument("--qos", help="MQTT broker qos level", default=0)
     options_parser.add_argument("--username", help="MQTT broker username")
     options_parser.add_argument("--password", help="MQTT broker password")
+    options_parser.add_argument("--senml", action='store_true')
     
     subparsers = parser.add_subparsers(help='types of mqtt parser')
     
@@ -44,7 +45,7 @@ def get_parser():
     p_parser.add_argument("--message", help="Publish a message", default="I'm a test")
     p_parser.add_argument("--thread-num", help="Publish thread number", default=1)
     p_parser.add_argument("--publish-num", help="Publish message seq number", default=1)
-
+    
     return parser
 
 
@@ -61,7 +62,7 @@ def main():
 
     parser = get_parser()
     args = parser.parse_args()
-
+    
     LOG.info(sys.argv) 
     if len(sys.argv) < 2:
         parser.print_help()

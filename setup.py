@@ -17,7 +17,7 @@ setup(
     description='MQTT Benchmark Client',
     author='Aureliano Sinatra',
     author_email='sinaure@gmail.com',
-    url='http://www.gppgle.com/',
+    url='http://www.ggg.com/',
     install_requires=requirements,
     license="MIT",
     entry_points={
