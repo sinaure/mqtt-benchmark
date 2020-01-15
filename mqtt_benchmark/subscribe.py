@@ -15,8 +15,8 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     epoch = datetime.datetime.utcfromtimestamp(0)
-    LOG.info("{} : Epoch").format(epoch)
-    LOG.info("{} : Subscribe on {}, QoS Level is {} \nMessage is \"{}\"".format(
+    LOG.info("Epoch {}").format(epoch)
+    LOG.info("Timestamp {} , Subscribe on {}, QoS Level is {}, Message is {}".format(
         datetime.datetime.now(),
         msg.topic,
         msg.qos,
