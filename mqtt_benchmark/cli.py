@@ -68,7 +68,7 @@ def main():
         parser.print_help()
         sys.exit()
         
-    if sys.argv[1] != "publish" and   sys.argv[0] != "subscribe":  
+    if sys.argv[1] != "publish" and   sys.argv[1] != "subscribe":  
         LOG.error('First positional argument not accepted (chose between subscribe or publish)')
         sys.exit()
     
