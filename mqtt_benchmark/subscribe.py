@@ -33,7 +33,7 @@ class Subscribe(Thread):
         self.qos = self.kwargs['qos'] if 'qos' in self.kwargs else 0
 
         self.sub_client = mqtt.Client("Subscribe")
-        self.sub_client.connect(host, port, keepalive=60)
+        self.sub_client.connect(host, port=int(port), keepalive=60)
         self.sub_client.on_connect = on_connect
         self.sub_client.on_message = on_message
 
