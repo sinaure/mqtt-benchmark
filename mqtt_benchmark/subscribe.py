@@ -45,9 +45,9 @@ class Subscribe(Thread):
         self.qos = self.kwargs['qos'] if 'qos' in self.kwargs else 0
         self.host = host
         self.port = port
-        
+        LOG.info("START initializeMqttCli")
         initializeMqttCli()
-        
+        LOG.info("END initializeMqttCli")
 
     def run(self):
         self.sub_client.loop_forever()
