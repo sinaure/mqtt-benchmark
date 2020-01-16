@@ -5,6 +5,7 @@ import logging
 import datetime
 from threading import Thread
 import paho.mqtt.client as mqtt
+import os
 
 LOG = logging.getLogger("Subscribe")
 
