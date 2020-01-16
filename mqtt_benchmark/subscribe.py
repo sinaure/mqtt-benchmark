@@ -23,6 +23,13 @@ def on_message(client, userdata, msg):
         msg.qos,
         str(msg.payload)
     ))
+    RESULTS_FILE = os.getenv('RESULTS_FILE')
+    try:
+      with open(RESULTS_FILE,'a+') as f:
+         f.write("OnMessage: "  + msg.payload + "\n")
+    except:
+      LOG.info("exception writing to result file")
+    
 
 
 class Subscribe(Thread):
