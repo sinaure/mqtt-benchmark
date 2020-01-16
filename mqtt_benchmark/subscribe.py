@@ -25,6 +25,7 @@ def on_message(client, userdata, msg):
         str(msg.payload)
     ))
     RESULTS_FILE = os.getenv('RESULTS_FILE')
+    LOG.info("RESULTS_FILE "+RESULTS_FILE)
     try:
       with open(RESULTS_FILE,'a+') as f:
          f.write("OnMessage: "  + msg.payload + "\n")
