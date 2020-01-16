@@ -13,6 +13,8 @@ LOG = logging.getLogger("Subscribe")
 def on_connect(client, userdata, flags, rc):
     LOG.info("Connected with result code " + str(rc))
 
+def on_subscribe(mqttc, obj, mid, granted_qos):
+    print("Subscribed: " + str(mid) + " " + str(granted_qos))
 
 def on_message(client, userdata, msg):
     epoch = datetime.datetime.utcfromtimestamp(0)
@@ -41,20 +43,31 @@ class Subscribe(Thread):
         self.kwargs = kwargs
         self.topic = self.kwargs['topic'] if 'topic' in self.kwargs else None
         self.qos = self.kwargs['qos'] if 'qos' in self.kwargs else 0
-
-        self.sub_client = mqtt.Client("Subscribe")
-        self.sub_client.connect(host, port=int(port), keepalive=60)
-        self.sub_client.on_connect = on_connect
-        self.sub_client.on_message = on_message
-
-        self.sub_client.subscribe(topic=self.topic, qos=int(self.qos))
+        self.host = host
+        self.port = port
+        
+        initializeMqttCli()
+        
 
     def run(self):
         self.sub_client.loop_forever()
 
     def run_on_thread(self):
         self.sub_client.loop_forever()
-
+        
+    def initializeMqttCli(self):
+        try:
+            self.sub_client = mqtt.Client(None,clean_session=True)
+            self.sub_client.on_message = self.on_message
+            self.sub_client.on_connect = self.on_connect
+            self.sub_client.on_subscribe = self.on_subscribe
+            self.sub_client.connect(self.host, int(self.port), 60)
+            self.sub_client.subscribe(topic=self.topic, qos=int(self.qos))
+            self.sub_client.loop_forever()
+            
+        except TypeError:
+            print('Connect to mqtt error')
+            return     
 
 def main(args):
     try:
