@@ -12,20 +12,20 @@ pip uninstall mqtt-benchmark
 ```
 
 ### Generic Publish
-```sh
+```
 mqtt-bench publish --host 192.168.99.100 --port 1883 --topic "test" --qos 0 --thread-num 10 --publish-num 50 --message "I'm test" --username hub-iot --password hub-iot
 ```
 ### Publish to mqtt bridge
-```sh
+```
 mqtt-bench publish --host 192.168.99.100 --port 1883 --topic "diatomic/paris" --qos 0 --thread-num 10 --publish-num 50 --message '{"senml" : [{"bn":"urn:sosa:Sensor:00sfsf08","n":"incoming","u":"count","v":1200},{"n":"outgoing","u":"count","v":506}]}' --senml
 ```
 
 ### Subscribe
-```sh
-mqtt-bench subscribe --host 192.168.99.100 --port 1883 --topic "test" --qos 2 --file output.txt
+```
+mqtt-bench subscribe --host 192.168.99.100 --port 1883 --topic "test" --qos 2 --file output.txt --interval 20
 ```
 
 ### Latency measurement publish
-```sh
+```
 mqtt-bench publish --host 192.168.99.100 --port 1883 --topic "test" --qos 0 --thread-num 10 --publish-num 50 --message $(($(date +%s%N)/1000000))
 ```

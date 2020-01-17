@@ -21,6 +21,7 @@ class Subscribe(Thread):
         self.topic = self.kwargs['topic'] if 'topic' in self.kwargs else None
         self.qos = self.kwargs['qos'] if 'qos' in self.kwargs else 0
         self.output_file = self.kwargs['file'] if 'file' in self.kwargs else None
+        self.interval = self.kwargs['interval'] if 'interval' in self.kwargs else None
 
         self.sub_client = mqtt.Client("EGM-subscriber")
         self.sub_client.on_connect = self.on_connect
@@ -35,7 +36,14 @@ class Subscribe(Thread):
     
         
     def run(self):
-        self.sub_client.loop_forever()
+        if self.interval is None:
+            self.sub_client.loop_forever()
+        else:
+            self.sub_client.loop_start()
+            LOG.info("Disconnecting after {0} seconds".format(self.interval))
+            time.sleep(int(self.interval)) 
+            self.sub_client.disconnect() 
+            self.sub_client.loop_stop()
 
     def on_message(self, client, userdata, msg):
         LOG.debug("{0} : Subscribe on {1}, QoS Level is {2}, Message is {3}".format(
@@ -69,7 +77,8 @@ def main(args):
             int(args.port),
             topic=args.topic,
             qos=args.qos,
-            file=args.file
+            file=args.file,
+            interval=args.interval
         )
         subscriber.run()
     except Exception as e:
