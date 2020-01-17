@@ -48,7 +48,7 @@ class Subscribe(Thread):
         if productionTime.isnumeric():
             latency = int((time.time() * 1000)) - int(productionTime)
             LOG.info("Latency: {0}".format(latency))
-            with open("out.txt", "a") as myfile:
+            with open(self.output_file, "a") as myfile:
                 myfile.write(str(productionTime)+"\t"+str(latency)+"\n")
     
            
