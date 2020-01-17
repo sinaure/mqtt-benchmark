@@ -8,24 +8,10 @@ import paho.mqtt.client as mqtt
 import time
 LOG = logging.getLogger("Subscribe")
 
-def on_connect(client, userdata, flags, rc):
-    LOG.info("Connected with result code " + str(rc))
-    
 
-def on_subscribe(mqttc, obj, mid, granted_qos):
-    LOG.info("Subscribed: " + str(mid) + " " + str(granted_qos))        
 
-def on_message(client, userdata, msg):
-    LOG.debug("{0} : Subscribe on {1}, QoS Level is {2}, Message is {3}".format(
-        datetime.datetime.now(),
-        msg.topic,
-        msg.qos,
-        str(msg.payload.decode("utf-8"))
-        ))
-    productionTime= msg.payload.decode("utf-8")
-    LOG.debug("productionTime: {0}".format(productionTime))
-    if productionTime.isnumeric():
-        LOG.info("Latency: {0}".format(int((time.time() * 1000)) - int(productionTime)))
+        
+
  
 class Subscribe(Thread):
     def __init__(self, host, port, **kwargs):
@@ -34,13 +20,13 @@ class Subscribe(Thread):
         self.kwargs = kwargs
         self.topic = self.kwargs['topic'] if 'topic' in self.kwargs else None
         self.qos = self.kwargs['qos'] if 'qos' in self.kwargs else 0
+        self.output_file = self.kwargs['file'] if 'file' in self.kwargs else None
 
         self.sub_client = mqtt.Client("EGM-subscriber")
-        self.sub_client.on_connect = on_connect
-        self.sub_client.on_message = on_message
-        self.sub_client.on_subscribe = on_subscribe
+        self.sub_client.on_connect = self.on_connect
+        self.sub_client.on_message = self.on_message
+        self.sub_client.on_subscribe = self.on_subscribe
         self.sub_client.connect(host, port, keepalive=60)
-        
         
         time.sleep(2)
             
@@ -51,8 +37,30 @@ class Subscribe(Thread):
     def run(self):
         self.sub_client.loop_forever()
 
+    def on_message(self, client, userdata, msg):
+        LOG.debug("{0} : Subscribe on {1}, QoS Level is {2}, Message is {3}".format(
+            datetime.datetime.now(),
+            msg.topic,
+            msg.qos,
+            str(msg.payload.decode("utf-8"))
+            ))
+        productionTime= msg.payload.decode("utf-8")
+        if productionTime.isnumeric():
+            latency = int((time.time() * 1000)) - int(productionTime)
+            LOG.info("Latency: {0}".format(latency))
+            with open("out.txt", "a") as myfile:
+                myfile.write(str(productionTime)+"\t"+str(latency)+"\n")
+    
+           
 
-
+    def on_subscribe(self, client, obj, mid, granted_qos):
+        LOG.info("Subscribed: " + str(mid) + " " + str(granted_qos))
+        LOG.info("output to : {0}".format(self.output_file))
+    
+    def on_connect(self, client, userdata, flags, rc):
+        LOG.info("Connected with result code " + str(rc))
+    
+        
 def main(args):
     try:
         LOG.info("Main method topic: {0} , QoS Level is {1}".format(args.topic, args.qos))
@@ -61,6 +69,7 @@ def main(args):
             int(args.port),
             topic=args.topic,
             qos=args.qos,
+            file=args.file
         )
         subscriber.run()
     except Exception as e:
