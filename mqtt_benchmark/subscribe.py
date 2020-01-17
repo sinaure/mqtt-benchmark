@@ -16,14 +16,16 @@ def on_subscribe(mqttc, obj, mid, granted_qos):
     LOG.info("Subscribed: " + str(mid) + " " + str(granted_qos))        
 
 def on_message(client, userdata, msg):
-    LOG.debug("{} : Subscribe on {}, QoS Level is {} \nMessage is \"{}\"".format(
+    LOG.debug("{0} : Subscribe on {1}, QoS Level is {2} Message is {3}".format(
         datetime.datetime.now(),
         msg.topic,
         msg.qos,
-        str(msg.payload)
+        str(msg.payload.decode("utf-8"))
         ))
-    if msg.payload.isdigit():
-        LOG.info("Latency: {0}".format(int(msg.payload)-datetime.datetime.now()))
+    productionTime= msg.payload.decode("utf-8")
+    LOG.debug("productionTime: {} ".format(productionTime))
+    if productionTime.isnumeric():
+        LOG.info("Latency: {0}".format(int((time.time() * 1000)) - productionTime))
  
 class Subscribe(Thread):
     def __init__(self, host, port, **kwargs):
