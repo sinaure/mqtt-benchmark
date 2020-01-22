@@ -8,9 +8,10 @@ import json
 import random
 from threading import Thread
 import paho.mqtt.client as mqtt
+import datetime
 
 LOG = logging.getLogger("Publish")
-
+import math
 
 class Publish(Thread):
     def __init__(self, host, port, **kwargs):
@@ -23,7 +24,11 @@ class Publish(Thread):
         self.username = kwargs['username'] if 'username' in kwargs else None
         self.password = kwargs['password'] if 'password' in kwargs else None
         self.senml = kwargs['senml'] if 'senml' in kwargs else False
-
+        self.sensors = kwargs['sensors'] if 'sensors' in kwargs else None
+        
+        self.frame = 15 # every 15min
+        self.period = 1440 #minutes per day
+        
         self.push_client = mqtt.Client()
 
         
@@ -34,6 +39,14 @@ class Publish(Thread):
         self.push_client.connect(host, port=int(port), keepalive=60)
         LOG.info("after connecting")
 
+    def oscillatoryFunc(self):
+        now = datetime.datetime.now()
+        minutes = now.hour*60 + now.minute
+        if minutes < 360 or minutes > 1080:
+            return 0
+        else:
+            return (10000*math.sin(math.pi*(minutes-360)/720) + 10000)  #max 20000 min 0
+        
     def run(self):
         LOG.info("run method")
         self.push_client.loop_start()
@@ -49,20 +62,15 @@ class Publish(Thread):
             if self.senml == True :
                 
                 message_as_json = json.loads(self.message)
-                LOG.debug("START message_as_json **********")
-                LOG.debug(message_as_json)
-                LOG.debug("END message_as_json**********")
                     
                 for x in message_as_json["senml"]:
+                    x["v"]=oscillatoryFunc()
                     LOG.debug(x)
-                    x["v"]=random.randint(0,500)
-                    LOG.debug("START senml part **********")
-                    LOG.debug(x)
-                    LOG.debug("END senml part **********")                    
                 
                 modified_message = json.dumps(message_as_json["senml"])    
+                LOG.debug("Publishing")
                 LOG.debug(modified_message)
-                LOG.debug("END modified_message**********")    
+                
             
             self.push_client.publish(self.topic, modified_message, qos=self.qos)
             

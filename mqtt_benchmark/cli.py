@@ -36,6 +36,7 @@ def get_parser():
     options_parser.add_argument("--username", help="MQTT broker username")
     options_parser.add_argument("--password", help="MQTT broker password")
     options_parser.add_argument("--senml", action='store_true')
+    options_parser.add_argument('--sensors', nargs='+', help='add sensor list', required=False)
     
     subparsers = parser.add_subparsers(help='types of mqtt parser')
     

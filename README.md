@@ -17,7 +17,7 @@ mqtt-bench publish --host 192.168.99.100 --port 1883 --topic "test" --qos 0 --th
 ```
 ### Publish to mqtt bridge
 ```sh
-mqtt-bench publish --host 192.168.99.100 --port 1883 --topic "diatomic/paris" --qos 0 --thread-num 10 --publish-num 50 --message '{"senml" : [{"bn":"urn:sosa:Sensor:00sfsf08","n":"incoming","u":"count","v":1200},{"n":"outgoing","u":"count","v":506}]}' --senml
+mqtt-bench publish --host 192.168.99.100 --port 1883 --topic "diatomic/paris" --qos 0 --thread-num 10 --publish-num 50 --message '{"senml" : [{"bn":"urn:sosa:Sensor:00sfsf08","n":"incoming","u":"count","v":1200},{"n":"outgoing","u":"count","v":506}]}' --senml --sensors urn:sosa:Sensor:diatomicPort01 urn:sosa:Sensor:diatomicPort02 urn:sosa:Sensor:diatomicPort02 urn:sosa:Sensor:diatomicPort01
 ```
 
 ### Subscribe
