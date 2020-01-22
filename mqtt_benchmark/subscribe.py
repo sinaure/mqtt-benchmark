@@ -6,6 +6,7 @@ import datetime
 from threading import Thread
 import paho.mqtt.client as mqtt
 import time
+import os
 LOG = logging.getLogger("Subscribe")
 
 
@@ -56,7 +57,11 @@ class Subscribe(Thread):
         if productionTime.isnumeric():
             latency = int((time.time() * 1000)) - int(productionTime)
             LOG.info("Latency: {0}".format(latency))
-            with open(self.output_file, "a+") as myfile:
+            if os.path.exists(self.output_file):
+                append_write = 'a' # append if already exists
+            else:
+                append_write = 'w' # make a new file if not
+            with open(self.output_file, append_write) as myfile:
                 myfile.write("Time: "+str(productionTime)+"\t Latency:"+str(latency)+"\n")
     
            
