@@ -26,8 +26,9 @@ class Publish(Thread):
         self.senml = kwargs['senml'] if 'senml' in kwargs else False
         self.sensors = kwargs['sensors'] if 'sensors' in kwargs else None
         
-        self.frame = 15 # every 15min
-        self.period = 1440 #minutes per day
+        self.amplitude = kwargs['amplitude'] if 'amplitude' in kwargs else 10000 # max 10000
+        self.delta = kwargs['delta'] if 'delta' in kwargs else 360 # data production starts in 360 min from midnight
+        self.period = kwargs['period'] if 'period' in kwargs else 720 # repeats every 12h
         
         self.push_client = mqtt.Client()
 
@@ -45,7 +46,7 @@ class Publish(Thread):
         if minutes < 360 or minutes > 1080:
             return 0
         else:
-            return (10000*math.sin(math.pi*(minutes-360)/720) + 10000)  #max 20000 min 0
+            return (self.amplitude*math.sin(math.pi*(minutes-self.delta)/self.period) + self.amplitude)  
         
     def run(self):
         LOG.info("run method")
