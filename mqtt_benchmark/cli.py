@@ -36,6 +36,7 @@ def get_parser():
     options_parser.add_argument("--username", help="MQTT broker username")
     options_parser.add_argument("--password", help="MQTT broker password")
     options_parser.add_argument("--senml", action='store_true')
+    options_parser.add_argument("--amplitude", help="amplitude of oscillatory function (senml only)")
     options_parser.add_argument('--sensors', nargs='+', help='add sensor list', required=False)
     
     subparsers = parser.add_subparsers(help='types of mqtt parser')
@@ -46,6 +47,8 @@ def get_parser():
     p_parser.add_argument("--message", help="Publish a message", default="I'm a test")
     p_parser.add_argument("--thread-num", help="Publish thread number", default=1)
     p_parser.add_argument("--publish-num", help="Publish message seq number", default=1)
+    s_parser.add_argument("--file", help="Output subscribe results to file")
+    s_parser.add_argument("--interval", help="Subscribe for how many seconds")
     
     return parser
 
@@ -69,7 +72,7 @@ def main():
         parser.print_help()
         sys.exit()
         
-    if sys.argv[1] != "publish" and   sys.argv[0] != "subscribe":  
+    if sys.argv[1] != "publish" and   sys.argv[1] != "subscribe":  
         LOG.error('First positional argument not accepted (chose between subscribe or publish)')
         sys.exit()
     

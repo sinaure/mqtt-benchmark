@@ -17,10 +17,10 @@ mqtt-bench publish --host 192.168.99.100 --port 1883 --topic "test" --qos 0 --th
 ```
 ### Publish to mqtt bridge
 ```sh
-mqtt-bench publish --host 192.168.99.100 --port 1883 --topic "diatomic/paris" --qos 0 --thread-num 10 --publish-num 50 --message '{"senml" : [{"bn":"urn:sosa:Sensor:00sfsf08","n":"incoming","u":"count","v":1200},{"n":"outgoing","u":"count","v":506}]}' --senml --sensors urn:sosa:Sensor:diatomicPort01 urn:sosa:Sensor:diatomicPort02 urn:sosa:Sensor:diatomicPort02 urn:sosa:Sensor:diatomicPort01
+mqtt-bench publish --host 192.168.99.100 --port 1883 --topic "test" --qos 0 --thread-num 10 --publish-num 10 --amplitude 5000 --message '{"senml" : [{"bn":"urn:sosa:Sensor:00sfsf08","n":"incoming","u":"count","v":1200},{"n":"outgoing","u":"count","v":506}]}' --senml --sensors urn:sosa:Sensor:diatomicAA urn:sosa:Sensor:diatomicBB urn:sosa:Sensor:diatomicCC urn:sosa:Sensor:diatomicDD urn:sosa:Sensor:diatomicEE urn:sosa:Sensor:diatomicFF urn:sosa:Sensor:diatomicGG
 ```
 
 ### Subscribe
 ```sh
-$ mqtt-bench subscribe --host 192.168.99.100 --port 1883 --topic "test" --qos 2
+$ mqtt-bench subscribe --host 192.168.99.100 --port 1883 --topic "test" --qos 0
 ```

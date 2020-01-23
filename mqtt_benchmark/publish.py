@@ -26,7 +26,7 @@ class Publish(Thread):
         self.senml = kwargs['senml'] if 'senml' in kwargs else False
         self.sensors = kwargs['sensors'] if 'sensors' in kwargs else None
         
-        self.amplitude = kwargs['amplitude'] if 'amplitude' in kwargs else 10000 # max 10000
+        self.amplitude = int(kwargs['amplitude']) if 'amplitude' in kwargs else 10000 # max 10000
         self.delta = kwargs['delta'] if 'delta' in kwargs else 360 # data production starts in 360 min from midnight
         self.period = kwargs['period'] if 'period' in kwargs else 720 # repeats every 12h
         
@@ -46,7 +46,7 @@ class Publish(Thread):
         if minutes < 360 or minutes > 1080:
             return 0
         else:
-            return (self.amplitude*math.sin(math.pi*(minutes-self.delta)/self.period) + self.amplitude)  
+            return round(self.amplitude*math.sin(math.pi*(minutes-self.delta)/self.period) + self.amplitude)  
         
     def run(self):
         LOG.info("run method")
@@ -57,23 +57,31 @@ class Publish(Thread):
         #)
         for i in range(0, self.publish_num):
             
-            #modified_message = self.message + ", {0}".format(i + 1)
-            modified_message = self.message
+            if self.sensors is None or self.senml == False:
+                self.push_client.publish(self.topic, self.message, qos=self.qos)
             
-            if self.senml == True :
-                
-                message_as_json = json.loads(self.message)
+            else:
+                LOG.info("iterate over sensors") 
+                LOG.info(self.sensors)
+                for s in self.sensors:
+                       
+                    modified_message = self.message
                     
-                for x in message_as_json["senml"]:
-                    x["v"]=oscillatoryFunc()
-                    LOG.debug(x)
-                
-                modified_message = json.dumps(message_as_json["senml"])    
-                LOG.debug("Publishing")
-                LOG.debug(modified_message)
-                
-            
-            self.push_client.publish(self.topic, modified_message, qos=self.qos)
+                    if self.senml == True :
+                        
+                        message_as_json = json.loads(self.message)
+                            
+                        for x in message_as_json["senml"]:
+                            x["bn"]=s
+                            x["v"]=self.oscillatoryFunc()
+                            LOG.debug(x)
+                        
+                        modified_message = json.dumps(message_as_json["senml"])    
+                        LOG.debug("Publishing")
+                        LOG.debug(modified_message)
+                        
+                    
+                    self.push_client.publish(self.topic, modified_message, qos=self.qos)
             
 
         self.push_client.loop_stop()
@@ -106,7 +114,9 @@ def push(args, seq):
             publish_num=int(args.publish_num),
             username=args.username,
             password=args.password,
-            senml=args.senml
+            senml=args.senml,
+            sensors=args.sensors,
+            amplitude=args.amplitude
         )
         LOG.info("message creating")
         publish_client.message = args.message
