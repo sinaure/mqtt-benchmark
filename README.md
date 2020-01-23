@@ -22,7 +22,7 @@ mqtt-bench publish --host 192.168.99.100 --port 1883 --topic "diatomic/paris" --
 
 ### Subscribe
 ```
-mqtt-bench subscribe --host 192.168.99.100 --port 1883 --topic "test" --qos 2 --file output.txt --interval 20
+mqtt-bench subscribe --host 192.168.99.100 --port 1883 --topic "test" --qos 0 --file output.txt --interval 20
 ```
 
 ### Latency measurement publish

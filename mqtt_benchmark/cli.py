@@ -35,7 +35,6 @@ def get_parser():
     options_parser.add_argument("--qos", help="MQTT broker qos level", default=0)
     options_parser.add_argument("--username", help="MQTT broker username")
     options_parser.add_argument("--password", help="MQTT broker password")
-    options_parser.add_argument("--senml", action='store_true')
     
     subparsers = parser.add_subparsers(help='types of mqtt parser')
     
