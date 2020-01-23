@@ -29,6 +29,7 @@ class Publish(Thread):
         self.amplitude = int(kwargs['amplitude']) if 'amplitude' in kwargs else 10000 # max 10000
         self.delta = kwargs['delta'] if 'delta' in kwargs else 360 # data production starts in 360 min from midnight
         self.period = kwargs['period'] if 'period' in kwargs else 720 # repeats every 12h
+        self.delta1 = 50
         
         self.push_client = mqtt.Client()
 
@@ -40,13 +41,16 @@ class Publish(Thread):
         self.push_client.connect(host, port=int(port), keepalive=60)
         LOG.info("after connecting")
 
-    def oscillatoryFunc(self):
+    def oscillatoryFunc(self,type):
         now = datetime.datetime.now()
         minutes = now.hour*60 + now.minute
         if minutes < 360 or minutes > 1080:
             return 0
         else:
-            return round(self.amplitude*math.sin(math.pi*(minutes-self.delta)/self.period) + self.amplitude)  
+            if type == "outgoing":
+                return round(self.amplitude*math.sin(math.pi*(minutes-self.delta)/self.period) + self.amplitude) 
+            else:
+                return round(self.amplitude*math.sin(math.pi*(minutes-self.delta-self.delta1)/self.period) + self.amplitude)  
         
     def run(self):
         LOG.info("run method")
@@ -73,7 +77,7 @@ class Publish(Thread):
                             
                         for x in message_as_json["senml"]:
                             x["bn"]=s
-                            x["v"]=self.oscillatoryFunc()
+                            x["v"]=self.oscillatoryFunc(x["n"])
                             LOG.debug(x)
                         
                         modified_message = json.dumps(message_as_json["senml"])    
