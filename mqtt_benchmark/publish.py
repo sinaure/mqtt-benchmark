@@ -48,7 +48,7 @@ class Publish(Thread):
         #    message=self.message,
         #)
         for i in range(0, self.publish_num):
-            modified_message = self.message
+            self.message = int((time.time() * 1000))
             self.push_client.publish(self.topic, self.message, qos=self.qos)
             
 

@@ -29,3 +29,12 @@ mqtt-bench subscribe --host 192.168.99.100 --port 1883 --topic "test" --qos 0 --
 ```
 mqtt-bench publish --host 192.168.99.100 --port 1883 --topic "test" --qos 0 --thread-num 10 --publish-num 50 --message $(($(date +%s%N)/1000000))
 ```
+
+### Latency measurement publish Datahub
+```
+mqtt-bench publish --host 192.168.1.207 --port 1883 --topic "latency" --qos 0 --thread-num 10 --publish-num 50 --message yeah
+```
+### Subscribe Datahub
+```
+mqtt-bench subscribe --host 192.168.1.207 --port 1883 --topic "latency" --qos 0 --file output.txt --interval 200
+```
