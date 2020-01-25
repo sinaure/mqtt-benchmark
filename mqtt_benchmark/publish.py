@@ -83,8 +83,6 @@ def push(args, seq):
             username=args.username,
             password=args.password
         )
-        LOG.info("message creating")
-        publish_client.message = args.message
         LOG.info("client starting")
         publish_client.start()
     except Exception as e:

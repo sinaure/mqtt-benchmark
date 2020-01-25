@@ -36,5 +36,5 @@ mqtt-bench publish --host 192.168.1.207 --port 1883 --topic "latency" --qos 0 --
 ```
 ### Subscribe Datahub
 ```
-mqtt-bench subscribe --host 192.168.1.207 --port 1883 --topic "latency" --qos 0 --file output.txt --interval 200
+mqtt-bench subscribe --host 192.168.1.207 --port 1883 --topic "latency" --qos 0 --file output.txt --interval 2000
 ```

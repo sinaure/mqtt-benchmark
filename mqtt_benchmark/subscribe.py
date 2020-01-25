@@ -62,7 +62,7 @@ class Subscribe(Thread):
             else:
                 append_write = 'w' # make a new file if not
             with open(self.output_file, append_write) as myfile:
-                myfile.write("Time: "+str(productionTime)+"\t Latency:"+str(latency)+"\n")
+                myfile.write(str(productionTime)+";"+str(latency)+"\n")
     
            
 
