@@ -7,8 +7,8 @@
 * Unistall and reinstall at every dev step
 
 ```
-python setup.py install
 pip uninstall mqtt-benchmark
+python setup.py install
 ```
 
 ### Generic Publish
@@ -22,17 +22,13 @@ mqtt-bench publish --host 192.168.99.100 --port 1883 --topic "diatomic/paris" --
 
 ### Subscribe
 ```
-mqtt-bench subscribe --host 192.168.99.100 --port 1883 --topic "test" --qos 0 --file output.txt --interval 20
+mqtt-bench subscribe --host 192.168.99.100 --port 1883 --topic "test" --qos 0 --file output.txt --interval 2000
 ```
 
-### Latency measurement publish
-```
-mqtt-bench publish --host 192.168.99.100 --port 1883 --topic "test" --qos 0 --thread-num 10 --publish-num 50 --message $(($(date +%s%N)/1000000))
-```
 
-### Latency measurement publish Datahub
+### Latency measurement publish Datahub (payload == 100B)
 ```
-mqtt-bench publish --host 192.168.1.207 --port 1883 --topic "latency" --qos 0 --thread-num 10 --publish-num 50 --message yeah
+mqtt-bench publish --host 192.168.1.207 --port 1883 --topic "latency" --qos 0 --thread-num 10 --publish-num 1 --message {"aa": "kfjhgkdjfhgfdkhfdjg","bb": "ksdfhsdjhksdjh","cc": "fgdfgdfgdf", "dd":"gdfugydiuy6765888888"}
 ```
 ### Subscribe Datahub
 ```

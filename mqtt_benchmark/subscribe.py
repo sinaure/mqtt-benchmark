@@ -3,20 +3,20 @@
 import sys
 import logging
 import datetime
-from threading import Thread
+from threading import Thread, Event
+
 import paho.mqtt.client as mqtt
 import time
 import os
+import json
+
+
+logging.basicConfig(filename='logs.txt', filemode='w', level=logging.DEBUG)
 LOG = logging.getLogger("Subscribe")
 
-
-
-        
-
- 
 class Subscribe(Thread):
     def __init__(self, host, port, **kwargs):
-        super(Subscribe, self).__init__()
+        Thread.__init__(self)
         
         self.kwargs = kwargs
         self.topic = self.kwargs['topic'] if 'topic' in self.kwargs else None
@@ -24,7 +24,7 @@ class Subscribe(Thread):
         self.output_file = self.kwargs['file'] if 'file' in self.kwargs else None
         self.interval = self.kwargs['interval'] if 'interval' in self.kwargs else None
 
-        self.sub_client = mqtt.Client("EGM-subscriber")
+        self.sub_client = mqtt.Client()
         self.sub_client.on_connect = self.on_connect
         self.sub_client.on_message = self.on_message
         self.sub_client.on_subscribe = self.on_subscribe
@@ -53,8 +53,11 @@ class Subscribe(Thread):
             msg.qos,
             str(msg.payload.decode("utf-8"))
             ))
-        productionTime= msg.payload.decode("utf-8")
-        if productionTime.isnumeric():
+        message= json.loads(str(msg.payload.decode("utf-8")))
+        productionTime = message["time"] 
+        publisherId = message["publisherId"] 
+        
+        if productionTime is not None:
             latency = int((time.time() * 1000)) - int(productionTime)
             LOG.info("Latency: {0}".format(latency))
             if os.path.exists(self.output_file):
@@ -62,7 +65,7 @@ class Subscribe(Thread):
             else:
                 append_write = 'w' # make a new file if not
             with open(self.output_file, append_write) as myfile:
-                myfile.write(str(productionTime)+";"+str(latency)+"\n")
+                myfile.write(str(productionTime)+";"+publisherId+";"+str(latency)+"\n")
     
            
 
@@ -75,6 +78,7 @@ class Subscribe(Thread):
     
         
 def main(args):
+    event = Event()
     try:
         LOG.info("Main method topic: {0} , QoS Level is {1}".format(args.topic, args.qos))
         subscriber = Subscribe(
@@ -85,7 +89,9 @@ def main(args):
             file=args.file,
             interval=args.interval
         )
-        subscriber.run()
+        subscriber.start()
+            
     except Exception as e:
         LOG.error("%s" % (e.__str__()))
         sys.exit()
+
