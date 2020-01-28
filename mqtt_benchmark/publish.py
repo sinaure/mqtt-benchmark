@@ -152,7 +152,7 @@ def main(args):
     #    LOG.info("Main    : thread %d done at : "+str((time.time() * 1000)), index)        
 
 def thread_start(args, seq, counter):
-    LOG.info("thread_start method "+seq+1)
+    LOG.info("thread_start method "+str(seq+1))
     try:
         publish_client = Publish(
             args.host,

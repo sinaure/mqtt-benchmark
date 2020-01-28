@@ -21,8 +21,8 @@ echo "******* publisher: executing benchmark *******"
 for i in $( eval echo {1..$ROUNDS} )
 do  
     echo "Executing round $i"
-	echo "mqtt-bench publish --host $IP --port $PORT --topic $TOPIC --thread-num $(( $CLIENTS * i )) --publish-num $COUNT --message $(($(date +%s%N)/1000000)) 	 "
-	mqtt-bench publish --host $IP --port $PORT --topic $TOPIC  --thread-num $(( $CLIENTS * i )) --publish-num $COUNT --message $(($(date +%s%N)/1000000))	 
+	echo "mqtt-bench publish --host $IP --port $PORT --topic $TOPIC --thread-num $(( $CLIENTS * i )) --publish-num $COUNT"
+	mqtt-bench publish --host $IP --port $PORT --topic $TOPIC  --thread-num $(( $CLIENTS * i )) --publish-num $COUNT --message '{"aa": "kfjhgkdjfhgfdkhfdjg","bb": "ksdfhsdjhksdjh","cc": "fgdfgdfgdf", "dd":"gdfugydiuy6765888888"}'	 
 	sleep $INTERVAL
 done
 

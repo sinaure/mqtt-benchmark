@@ -28,7 +28,7 @@ mqtt-bench subscribe --host 192.168.99.100 --port 1883 --topic "test" --qos 0 --
 
 ### Latency measurement publish Datahub (payload == 100B)
 ```
-mqtt-bench publish --host 192.168.1.207 --port 1883 --topic "latency" --qos 0 --thread-num 10 --publish-num 1 --message {"aa": "kfjhgkdjfhgfdkhfdjg","bb": "ksdfhsdjhksdjh","cc": "fgdfgdfgdf", "dd":"gdfugydiuy6765888888"}
+mqtt-bench publish --host 192.168.1.207 --port 1883 --topic "latency" --qos 0 --thread-num 10 --publish-num 1 --message '{"aa": "kfjhgkdjfhgfdkhfdjg","bb": "ksdfhsdjhksdjh","cc": "fgdfgdfgdf", "dd":"gdfugydiuy6765888888"}'
 ```
 ### Subscribe Datahub
 ```
