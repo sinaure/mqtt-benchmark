@@ -107,10 +107,9 @@ class Publish(Thread):
             obj["time"] = int((time.time() * 1000))
             obj["publisherId"] = self.publisherId
             
+            self.push_client.publish(self.topic, json.dumps(obj), qos=self.qos)  
             if self.publish_freq is not None:
-                time.sleep(self.publish_freq/1000)
-            
-            self.push_client.publish(self.topic, json.dumps(obj), qos=self.qos)    
+                time.sleep(self.publish_freq/1000)  
         
         end_time = int((time.time() * 1000))
         LOG.info("END publish method for clients : {1} at : {0} ".format(
