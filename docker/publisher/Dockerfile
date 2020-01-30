@@ -12,6 +12,7 @@ RUN apt update
 RUN apt install -y python3-pip python3-dev libcurl4-gnutls-dev librtmp-dev git
 RUN apt install -y jq 
 RUN pip install --upgrade pip
+RUN apt install -y psmisc procps
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 

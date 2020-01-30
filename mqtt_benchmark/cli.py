@@ -44,6 +44,7 @@ def get_parser():
     p_parser.add_argument("--message", help="Publish a message", default="I'm a test")
     p_parser.add_argument("--thread-num", help="Publish thread number", default=1)
     p_parser.add_argument("--publish-num", help="Publish message seq number", default=1)
+    p_parser.add_argument("--publish-freq", help="Publish message time frequency", default=1)
     s_parser.add_argument("--file", help="Output subscribe results to file")
     s_parser.add_argument("--interval", help="Subscribe for how many seconds")
     

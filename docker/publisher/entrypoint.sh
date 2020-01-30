@@ -26,4 +26,7 @@ do
 	sleep $INTERVAL
 done
 
+pkill -9 python
+sleep $INTERVAL
+
 echo "probe closed output redirect to $RESULTS_FILE"

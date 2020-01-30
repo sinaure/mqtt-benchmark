@@ -43,7 +43,8 @@ class Publish(Thread):
         self.username = kwargs['username'] if 'username' in kwargs else None
         self.password = kwargs['password'] if 'password' in kwargs else None
         self.thread_num = kwargs['thread_num'] if 'thread_num' in kwargs else 1
-
+        self.publish_freq = int(kwargs['publish_freq']) if 'publish_freq' in kwargs else None
+        
         self.push_client = mqtt.Client("publisher"+str(threadNumber))
         self.publisherId = "publisher"+str(threadNumber)
         self.push_client.on_publish = self.on_publish
@@ -105,6 +106,10 @@ class Publish(Thread):
             obj = json.loads(self.message)
             obj["time"] = int((time.time() * 1000))
             obj["publisherId"] = self.publisherId
+            
+            if self.publish_freq is not None:
+                time.sleep(self.publish_freq/1000)
+            
             self.push_client.publish(self.topic, json.dumps(obj), qos=self.qos)    
         
         end_time = int((time.time() * 1000))
@@ -165,7 +170,8 @@ def thread_start(args, seq, counter):
             username=args.username,
             password=args.password,
             message=args.message,
-            thread_num=args.thread_num
+            thread_num=args.thread_num,
+            publish_freq=int(args.publish_freq)
         )
         threads.append(publish_client)
         publish_client.start()
